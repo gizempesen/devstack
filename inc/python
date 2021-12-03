@@ -129,6 +129,7 @@ function pip_install {
     xtrace=$(set +o | grep xtrace)
     set +o xtrace
     local upgrade=""
+    local ignore_installed=""
     local offline=${OFFLINE:-False}
     if [[ "$offline" == "True" || -z "$@" ]]; then
         $xtrace
@@ -140,6 +141,7 @@ function pip_install {
     PIP_UPGRADE=$(trueorfalse False PIP_UPGRADE)
     if [[ "$PIP_UPGRADE" = "True" ]] ; then
         upgrade="--upgrade"
+        ignore_installed="--ignore-installed"
     fi
 
     if [[ -z "$os_PACKAGE" ]]; then
@@ -195,7 +197,7 @@ function pip_install {
         no_proxy="${no_proxy:-}" \
         PIP_FIND_LINKS=$PIP_FIND_LINKS \
         SETUPTOOLS_SYS_PATH_TECHNIQUE=rewrite \
-        $cmd_pip $upgrade \
+        $cmd_pip $upgrade $ignore_installed \
         $@
     result=$?
 
